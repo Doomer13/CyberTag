@@ -20,11 +20,15 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.url;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class MainPage {
 
-    public MainPage() {};
+    public MainPage() {
+    }
+
+    ;
 
     ElementsCollection collectionElements = $$x("//li");
 
@@ -56,9 +60,7 @@ public class MainPage {
     }
 
 
-
-
-    public List <String> checkAndPrintWorkingLinks() {
+    public List<String> checkAndPrintWorkingLinks() {
         List<SelenideElement> workingLinksList = new ArrayList<>();
 
         // Находим рабочие ссылки (как было раньше)
@@ -107,8 +109,9 @@ public class MainPage {
     }
 
 
-    public void clickAllWorkingLinksAndCheckURL() {
+    public List<String> clickAllWorkingLinksAndCheckURL() {
         List<String> workingHrefs = checkAndPrintWorkingLinks();
+        List<String> openedPageUrls = new ArrayList<>();  // Список для URL открытых страниц
 
         for (int i = 0; i < workingHrefs.size(); i++) {
             //open("https://cyber-tag.ru/");
@@ -120,13 +123,14 @@ public class MainPage {
             if (linkToClick.isDisplayed()) {
                 linkToClick.click();
                 String actualUrl = WebDriverRunner.url();
+                openedPageUrls.add(actualUrl);
                 System.out.println("✓ " + (i + 1) + ". " + workingHrefs.get(i) + " → " + actualUrl);
             } else {
                 System.out.println("⚠️ " + (i + 1) + ". ПРОПУЩЕН (скрыт): " + workingHrefs.get(i));
             }
         }
+        return openedPageUrls;
     }
-
 
 
     private SelenideElement getWorkingLinkByIndex(int index) {
@@ -146,24 +150,39 @@ public class MainPage {
     }
 
 
+    public boolean checkUrl() {
 
+        List<String> workingLinks = checkAndPrintWorkingLinks();
+        List<String> afterClick = clickAllWorkingLinksAndCheckURL();
 
-    public void mainThemAllclickableElements () {
-        ElementsCollection clickableElements = collectionElements.filterBy(clickable);
-        System.out.println("Всего li: " + collectionElements.size());
-        System.out.println("Кликабельных: " + clickableElements.size());
+        for (String a : workingLinks) {
+            for (String z : afterClick) {
+                if (a.equals(z)) {
+                    System.out.println("Совпадение: '" + a + "' == '" + z + "'");
 
-        ElementsCollection visibleOnly = collectionElements.filterBy(Condition.visible);
-        System.out.println("Видимых: " + visibleOnly.size());
+                }return true;
+            }
 
-        ElementsCollection enabledOnly = collectionElements.filterBy(Condition.enabled);
-        System.out.println("Enabled: " + enabledOnly.size());
-
-        //  Потерянные элементы
-        ElementsCollection notClickable = collectionElements.excludeWith(Condition.clickable);
-        System.out.println("НЕ кликабельных: " + notClickable.size());
-
+        }
+        return false;
     }
+
+        public void mainThemAllclickableElements () {
+            ElementsCollection clickableElements = collectionElements.filterBy(clickable);
+            System.out.println("Всего li: " + collectionElements.size());
+            System.out.println("Кликабельных: " + clickableElements.size());
+
+            ElementsCollection visibleOnly = collectionElements.filterBy(Condition.visible);
+            System.out.println("Видимых: " + visibleOnly.size());
+
+            ElementsCollection enabledOnly = collectionElements.filterBy(Condition.enabled);
+            System.out.println("Enabled: " + enabledOnly.size());
+
+            //  Потерянные элементы
+            ElementsCollection notClickable = collectionElements.excludeWith(Condition.clickable);
+            System.out.println("НЕ кликабельных: " + notClickable.size());
+
+        }
 }
 
 

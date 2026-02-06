@@ -3,6 +3,7 @@ package com.cybertag.tests;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
 import com.cybertag.pages.MainPage;
+import dev.failsafe.internal.util.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,9 +55,17 @@ public class CyberTagTest extends BaseTest {
     }
 
     @Test
-    public void clickAllWorkingLinksAndCheckURLTest() {
+    public void clickAllWorkingLinksTest() {
 
         mainPage.clickAllWorkingLinksAndCheckURL();
 
     }
+
+    @Test
+    public void checkUrl (){
+
+        Assert.isTrue(mainPage.checkUrl(), "pizda");
+
+    }
+
 }
