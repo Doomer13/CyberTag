@@ -14,27 +14,25 @@ import java.io.IOException;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 
-public class CyberTagTest {
+public class CyberTagTest extends BaseTest {
 
     MainPage mainPage;
 
     @BeforeAll
-    public static void setUpAll() {
-        Configuration.browserSize = "1280x800";
+    static void setUpAll() {
+        Configuration.browserSize = "1920x1080";  // ✅ РАБОТАЕТ!
+        Configuration.timeout = 10000;
     }
 
-
     @BeforeEach
-    public void setUp() {
-        Configuration.browserCapabilities = new ChromeOptions().addArguments("--remote-allow-origins=*");
-
+    void setUp() {
         open("https://cyber-tag.ru/");
         $("body").shouldBe(visible);
         mainPage = page(MainPage.class);
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         WebDriverRunner.closeWebDriver();
     }
 

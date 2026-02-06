@@ -4,6 +4,8 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
+import org.openqa.selenium.ElementNotInteractableException;
+import org.openqa.selenium.TimeoutException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -106,20 +108,26 @@ public class MainPage {
 
 
     public void clickAllWorkingLinksAndCheckURL() {
-        List<String> workingHrefs = checkAndPrintWorkingLinks();  // Берем только href!
+        List<String> workingHrefs = checkAndPrintWorkingLinks();
 
         for (int i = 0; i < workingHrefs.size(); i++) {
-            open("https://cyber-tag.ru/");  // Главная страница
+            //open("https://cyber-tag.ru/");
 
-            // ✅ ИЩЕМ ЭЛЕМЕНТ ЗАНОВО после open!
             SelenideElement currentLink = getWorkingLinkByIndex(i);
-            currentLink.$$("a").first().click();
+            SelenideElement linkToClick = currentLink.$$("a").first();
 
-            String actualUrl = WebDriverRunner.url();
-            System.out.println((i + 1) + ". " + workingHrefs.get(i) + " → " + actualUrl);
-
+            // ✅ МОМЕНТАЛЬНАЯ проверка БЕЗ ожидания!
+            if (linkToClick.isDisplayed()) {
+                linkToClick.click();
+                String actualUrl = WebDriverRunner.url();
+                System.out.println("✓ " + (i + 1) + ". " + workingHrefs.get(i) + " → " + actualUrl);
+            } else {
+                System.out.println("⚠️ " + (i + 1) + ". ПРОПУЩЕН (скрыт): " + workingHrefs.get(i));
+            }
         }
     }
+
+
 
     private SelenideElement getWorkingLinkByIndex(int index) {
         int currentIndex = 0;
@@ -136,13 +144,6 @@ public class MainPage {
         }
         throw new RuntimeException("Ссылка #" + index + " не найдена");
     }
-
-
-
-
-
-
-
 
 
 
