@@ -69,4 +69,9 @@ public class CyberTagTest extends BaseTest {
         mainPage.mainThemAllclickableElements();
     }
 
+    @Test
+    public void debugTest() {
+        mainPage.debugMenuLocations();
+    }
+
 }

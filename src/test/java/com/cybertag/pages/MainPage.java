@@ -66,7 +66,8 @@ public class MainPage {
 
     // ✅ СВЕЖИЕ ЭЛЕМЕНТЫ КАЖДЫЙ РАЗ
     private ElementsCollection getMenuLinks() {
-        return $$x("//li");
+        return $$x("(//header//li | //nav//li | //*[contains(@class,'footer-widget') or contains(@class,'fw-links')]//li)");
+        //return $$x("//li");
     }
 
     public List<String> checkAndPrintWorkingLinks() {
@@ -328,6 +329,17 @@ public class MainPage {
         System.out.println("✅ УСПЕШНО: " + successCount + "/" + workingHrefs.size());
         return successCount > 0;
     }
+
+    public void debugMenuLocations() {
+        System.out.println("=== НАЙДЕНО ===");
+        ElementsCollection menus = $$x("//header//li | //nav//li | //*[contains(@class,'footer-widget')]//li");
+        menus.forEach(li -> {
+            String href = li.$("a").attr("href");
+            System.out.println("Найден: " + href + " | Текст: " + li.text());
+        });
+        System.out.println("Всего: " + menus.size());
+    }
+
 }
 
 
