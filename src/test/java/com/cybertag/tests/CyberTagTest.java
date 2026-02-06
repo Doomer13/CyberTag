@@ -4,13 +4,9 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
 import com.cybertag.pages.MainPage;
 import dev.failsafe.internal.util.Assert;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.junit.jupiter.api.*;
 
-import java.io.IOException;
+import java.util.List;
 
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
@@ -21,7 +17,7 @@ public class CyberTagTest extends BaseTest {
 
     @BeforeAll
     static void setUpAll() {
-        Configuration.browserSize = "1920x1080";  // ✅ РАБОТАЕТ!
+        Configuration.browserSize = "1920x1080";
         Configuration.timeout = 10000;
     }
 
@@ -38,34 +34,39 @@ public class CyberTagTest extends BaseTest {
     }
 
     @Test
+    @DisplayName("🔍 Отладка: все ссылки")
+    public void debugAllLinksTest() {
+        mainPage.debugAllLinks();
+    }
+
+    @Test
+    @DisplayName("📋 Рабочие ссылки (БЕЗ телефонов)")
+    public void printAllWorkingLinksTest() {
+        mainPage.checkAndPrintWorkingLinks();
+    }
+
+    @Test
+    @DisplayName("✅ Проверка кликабельности")
+    public void checkWorkingLinksTest() {
+        mainPage.checkWorkingLinks();  // ✅ Без List в тесте!
+    }
+
+    @Test
+    @DisplayName("🔥 ПРОЩЕЛКИВАНИЕ ВСЕХ ССЫЛОК")
+    public void clickAllWorkingLinksTest() {
+        mainPage.simpleClickAllLinks();
+    }
+
+    @Test
+    @DisplayName("🎯 ПРОВЕРКА ВСЕХ ССЫЛОК")
+    public void checkUrlTest() {
+        Assert.isTrue(mainPage.simpleClickAllLinks(), "Все ссылки работают!");
+    }
+
+    @Test
+    @DisplayName("📊 Анализ меню")
     public void mainThemAllclickableElementsTest() {
         mainPage.mainThemAllclickableElements();
-    }
-
-    @Test
-    public void checkWorkingLinksTest() throws IOException {
-        mainPage.checkWorkingLinks();
-    }
-
-    @Test
-    public void printAllWorkingLinksTest() {
-
-        mainPage.checkAndPrintWorkingLinks();
-
-    }
-
-    @Test
-    public void clickAllWorkingLinksTest() {
-
-        mainPage.clickAllWorkingLinksAndCheckURL();
-
-    }
-
-    @Test
-    public void checkUrl (){
-
-        Assert.isTrue(mainPage.checkUrl(), "pizda");
-
     }
 
 }
